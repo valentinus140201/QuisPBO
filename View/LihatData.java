@@ -5,16 +5,24 @@
  */
 package View;
 
+import Model.User;
+import static com.sun.xml.internal.fastinfoset.alphabet.BuiltInRestrictedAlphabets.table;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRootPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 
 /**
@@ -22,57 +30,59 @@ import javax.swing.JTextField;
  * @author valentinus
  */
 public class LihatData implements ActionListener {
-    JFrame frame = new JFrame("Lihat Data Pengguna Berdasarkan Kategori Dipilih");
-    JPanel menu = new JPanel();
-
-    JComboBox kategori = new JComboBox();
-    JButton search= new JButton("SEARCH");
+    JFrame frame = new JFrame("LIHAT DATA");
+    JPanel isi = new JPanel();
+    JTable table;
+    JScrollPane scroll;
     JButton back = new JButton("BACK");
     
-    public LihatData(){
+    public LihatData(ArrayList<User> listUser) {
         
-        frame.setLayout(null);
-        frame.setSize(700,500);
+        frame.setSize(950, 750);
         frame.setLocationRelativeTo(null);
-        menu.setLayout(null);
-        menu.setBounds(10,10,360,530);
-        menu.setBackground(Color.ORANGE);
-        search.setBounds(250,300,120,50);
-        back.setBounds(100,300,100,30);
+        frame.setLayout(null);
         
-        menu.add(search);
-
-
-        //registrasi.addActionListener((ActionListener) this);
+        isi.setLayout(null);
         
-        frame.add(menu);
-        frame.setUndecorated(true);
-        frame.getRootPane().setWindowDecorationStyle(JRootPane.PLAIN_DIALOG);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        isi.setBounds(10,20,900,750);
+
+        back.setBounds(400,600,120,50);
+        
+        isi.add(back);
+        
+        back.addActionListener((ActionListener) this);
+        
+        String[] header = {"Nama", "Email", "Category"};
+        
+        String[][] isitable = new String[listUser.size()][3];
+        
+        for(int i = 0; i < listUser.size(); i++){
+            User user = listUser.get(i);
+            isitable[i][0] = user.getName();
+            isitable[i][1] = user.getEmail();
+            isitable[i][2] = user.getIdCategory();
+        }
+        
+        table = new JTable(isitable, header);
+        scroll = new JScrollPane(table);
+        scroll.setBounds(50, 50, 800, 500);
+        isi.add(scroll);
+        
+        frame.add(isi);
         frame.setVisible(true);
-
     }
-    
 
     @Override
-    public void actionPerformed(ActionEvent ae){
-//        String command = ae.getActionCommand();
-//        if(command == "LOGIN"){
-//            Staff staff = control.getStaff(textEmail.getText());
-//            if(textEmail.getText().equals(staff.getUsername())){
-//                if(textPassword.getText().equals(staff.getPassword())){
-//                    Singleton.getInstance().setStaff(staff);
-//                    Singleton.getInstance().setCabang(control.getCabang(staff.getIdCabang()));
-//                    frame.setVisible(false);
-//                    MainMenu mainMenu = new MainMenu();
-//                }else{
-//                    JOptionPane.showMessageDialog(null,"Username Atau Password Salah");
-//                }
-//            }
-//            
-//            if(textEmail.getText().equals("") || textPassword.getText().equals("")){
-//                JOptionPane.showMessageDialog(null,"Username Atau Password Harus Di isi");
-//            }
-//        }     
+    public void actionPerformed(ActionEvent ae) {
+        String command = ae.getActionCommand();
+        switch(command) {
+            case "BACK": 
+                new MainMenu();
+                frame.setVisible(false);
+                break;
+            default: 
+                break;
+        }
     }
+    
 }

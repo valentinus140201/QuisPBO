@@ -69,11 +69,11 @@ public class MainMenu implements ActionListener{
                 frame.setVisible(false);
                 break;
             case "REGISTRASI":
-                
+                new Registrasi();
                 frame.setVisible(false);
                 break;
             case "LIHAT DATA":
-                
+                new PreLihatData();
                 frame.setVisible(false);
                 break;
             default: 

@@ -15,53 +15,33 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class ControllerUser {
     
     static DBHandler conn = new DBHandler();
-    
-    public static boolean addDokter(User user){
+
+    public static ArrayList<User> getAllUserbyCategory(String idCategory) {
+        ArrayList<User> listUser = new ArrayList<User>();
         conn.connect();
-        String query = "INSERT INTO user VALUES(?,?,?,?)";
+        String query = "SELECT * FROM User WHERE idCategory = '" + idCategory + " '" ;
         try {
-            PreparedStatement stmt = conn.con.prepareStatement(query);
-            stmt.setString(1, user.getName());
-            stmt.setString(2, user.getEmail());
-            stmt.setObject(3, user.getPassword());
-            stmt.setString(4, user.getIdCategory());
-            stmt.executeUpdate();
-            return (true);
+            Statement stmt = conn.con.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("Id"));
+                user.setName(rs.getString("Name"));
+                user.setEmail(rs.getString("Email"));
+                user.setIdCategory(rs.getString("idCategory"));
+                listUser.add(user);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-            return (false);
         }
+        return (listUser);
     }
-    
-//    public static User getDokter(String nik){
-//        conn.connect();
-//        User user = new User();
-//        String query = "SELECT * FROM user WHERE nid='" + nik + "'";
-//        try {
-//            Statement stmt = conn.con.createStatement();
-//            ResultSet rs = stmt.executeQuery(query);
-//            while (rs.next()) {
-//                dokter.setNIK(rs.getString("NIK"));
-//                dokter.setNama(rs.getString("Nama"));
-//                dokter.setTglLahir((Date)rs.getObject("Tgl_lahir"));
-//                dokter.setGolDar(rs.getString("Goldar"));
-//                dokter.setGender(rs.getString("Gender"));
-//                dokter.setNID(rs.getString("NID"));
-//                dokter.setPoliklinik(rs.getString("Poliklinik"));
-//                dokter.setTelepon(rs.getString("No_Telepon"));
-//                dokter.setAbsen(getAllAbsen(rs.getString("NID")));
-//                dokter.setAlamat(rs.getString("Alamat"));
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return (dokter);
-//    }
     
     public static User login(String email){
         conn.connect();
@@ -78,7 +58,54 @@ public class ControllerUser {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            return null;
         }
         return (user);
+    }
+    
+    public static boolean registerUser(User user){
+        conn.connect();
+        String query = "INSERT INTO user(name, email, password, idCategory) VALUES(?,?,?,?)";
+        try {
+            PreparedStatement stmt = conn.con.prepareStatement(query);
+            stmt.setObject(1, user.getName());
+            stmt.setString(2, user.getEmail());
+            stmt.setString(3, user.getPassword());
+            stmt.setString(4, user.getIdCategory());
+            stmt.executeUpdate();
+            return (true);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return (false);
+        }        
+    }
+    public static boolean updateProfil(User user, String emailLama){
+        conn.connect();
+        String query = "UPDATE user SET name='" + user.getName()+ "', "
+                + "email='" + user.getEmail() + "', "
+                + "password='" + user.getPassword() + "', "
+                + "idCategory='" + user.getIdCategory() + "' "
+                + "WHERE email='" + emailLama + "'";
+        try {
+            Statement stmt = conn.con.createStatement();
+            stmt.executeUpdate(query);
+            return (true);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return (false);
+        }      
+    }
+    public static boolean deleteUser(User user){
+        conn.connect();
+
+        String query = "DELETE FROM user WHERE email='" + user.getEmail() + "'";
+        try {
+            Statement stmt = conn.con.createStatement();
+            stmt.executeUpdate(query);
+            return (true);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return (false);
+        }
     }
 }

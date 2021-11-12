@@ -9,6 +9,9 @@ package View;
  *
  * @author valentinus
  */
+import Controller.ControllerUser;
+import Model.Singleton;
+import Model.User;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -23,8 +26,12 @@ import java.util.Properties;
 public class MenuUser implements ActionListener{
     JFrame frame = new JFrame("Menu User");
     
-    JButton login = new JButton("UPDATE PROFILE");
+    JButton updateProfil = new JButton("UPDATE PROFILE");
+    JButton hapusData = new JButton("HAPUS DATA");
+   
     JPanel menu = new JPanel();
+    
+    JLabel nama, email ;
     
     public MenuUser(){
         
@@ -36,14 +43,23 @@ public class MenuUser implements ActionListener{
         
         menu.setBounds(10,20,600,450);
 
-        login.setBounds(250,100,120,50);
+        updateProfil.setBounds(250,100,120,50);
+        hapusData.setBounds(250,170,120,50);
 
+        menu.add(updateProfil);
+        menu.add(hapusData);
+
+        updateProfil.addActionListener((ActionListener) this);
+        hapusData.addActionListener((ActionListener) this);
+
+        nama = new JLabel(Singleton.getInstance().getUser().getName());
+        email = new JLabel(Singleton.getInstance().getUser().getEmail());
         
-        menu.add(login);
-
-
-        login.addActionListener((ActionListener) this);
-
+        nama.setBounds(100,20,200,50);
+        email.setBounds(100,60,200,50);
+        
+        menu.add(nama);
+        menu.add(email);
         
         frame.add(menu);
         
@@ -60,15 +76,18 @@ public class MenuUser implements ActionListener{
         String command = ae.getActionCommand();
         switch(command) {
             case "UPDATE PROFILE": 
-                
+                new UpdateProfil();
                 frame.setVisible(false);
                 break;
-            case "REGISTRASI":
-                
-                frame.setVisible(false);
-                break;
-            case "LIHAT DATA":
-                
+            case "HAPUS DATA":
+                boolean isDeleted = ControllerUser.deleteUser(Singleton.getInstance().getUser());
+                if(isDeleted){
+                    JOptionPane.showMessageDialog(null,"Data Sudah Di Hapus");
+                }else{
+                    JOptionPane.showMessageDialog(null,"ERROR");
+                }
+                Singleton.getInstance().setUser(null);
+                new MainMenu();
                 frame.setVisible(false);
                 break;
             default: 

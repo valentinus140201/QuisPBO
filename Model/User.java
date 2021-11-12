@@ -27,7 +27,7 @@ public class User {
         this.password = password;
         this.idCategory = idCategory;
     }
-    
+
 
     public String getPassword() {
         return password;
@@ -69,6 +69,4 @@ public class User {
     public void setIdCategory(String idCategory) {
         this.idCategory = idCategory;
     }
-    
-    
 }

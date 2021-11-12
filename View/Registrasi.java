@@ -18,6 +18,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JRootPane;
 import Controller.*;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 /**
@@ -30,7 +31,7 @@ public class Registrasi implements ActionListener{
     
     JLabel labEmail = new JLabel("Email");
     JLabel labNama = new JLabel("Nama");
-    JComboBox kategori = new JComboBox();
+    JComboBox kategori;
     JLabel labPassword = new JLabel("Password");
     JTextField textEmail = new JTextField();
     JTextField textNama = new JTextField();
@@ -44,29 +45,41 @@ public class Registrasi implements ActionListener{
         frame.setSize(700,500);
         frame.setLocationRelativeTo(null);
         menu.setLayout(null);
-        menu.setBounds(10,10,360,530);
-        menu.setBackground(Color.ORANGE);
-        labEmail.setBounds(50, 150, 100, 30);
-        labNama.setBounds(50,170,100,30);
-        labPassword.setBounds(50, 250, 150, 30);
-        textEmail.setBounds(150, 150, 150, 30);
-        textNama.setBounds(150, 170, 150, 30);
-        textPassword.setBounds(150, 250, 150, 30);
-      //  kategori.setBounds();
-        registrasi.setBounds(250,300,120,50);
-        back.setBounds(100,300,100,30);
-        ArrayList<CategoryUser> listCategoryUser = ControllerCategoryUser.getAllCategoryUser();
-
+        menu.setBounds(10,10,450,550);
         
-//        menu.add(kategori);
-//        menu.add(registrasi);
-//        menu.add(labEmail);
-//        menu.add(labNama);
-//        menu.add(labPassword);
-//        menu.add(textEmail);
-//        menu.add(textPassword);
+        labNama.setBounds(50,80,150,30);
+        labEmail.setBounds(50, 150, 150, 30);
+        labPassword.setBounds(50, 220, 150, 30);
+        textNama.setBounds(150, 80, 150, 30);
+        textEmail.setBounds(150, 150, 150, 30);
+        textPassword.setBounds(150, 220, 150, 30);
+        
+        registrasi.setBounds(10,300,120,50);
+        back.setBounds(150,300,120,50);
+        ArrayList<CategoryUser> listCategoryUser = ControllerCategoryUser.getAllCategoryUser();
+        String[] listCategory = new String[listCategoryUser.size()];
+        
+        for (int i = 0; i < listCategoryUser.size(); i++) {
+            CategoryUser cat = listCategoryUser.get(i);
+            listCategory[i] = cat.getName();
+        }
+        
+        kategori = new JComboBox(listCategory);
+        kategori.setBounds(100, 260, 150, 20);
+        
 
-       // registrasi.addActionListener((ActionListener) this);
+        menu.add(back);
+        menu.add(kategori);
+        menu.add(registrasi);
+        menu.add(labEmail);
+        menu.add(labNama);
+        menu.add(labPassword);
+        menu.add(textNama);
+        menu.add(textEmail);
+        menu.add(textPassword);
+
+        registrasi.addActionListener((ActionListener) this);
+        back.addActionListener((ActionListener) this);
         
         frame.add(menu);
         frame.setUndecorated(true);
@@ -80,7 +93,41 @@ public class Registrasi implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent ae){
         String command = ae.getActionCommand();
-       
+        switch(command){
+            case "BACK":
+                new MainMenu();
+                frame.setVisible(false);
+                break;
+            case "REGISTRASI":
+                String email = textEmail.getText();
+                String name = textNama.getText();
+                String password = textPassword.getText();
+                String kat = (String) kategori.getItemAt(kategori.getSelectedIndex());
+                User user = new User();
+                user.setName(name);
+                user.setEmail(email);
+                user.setPassword(password);
+                user.setIdCategory(kat);
+                User coba = ControllerUser.login(email);
+                
+                if(password.length() < 8){
+                    JOptionPane.showMessageDialog(null, "Password Harus Lebih Dari 8 Digit");
+                    new Registrasi();
+                    break;
+                }
+                if(email.equals(user.getEmail())){}
+                else{
+                    JOptionPane.showMessageDialog(null, "Email Sudah Terdaftar");
+                    new Registrasi();
+                    break;
+                }
+                ControllerUser.registerUser(user);
+                JOptionPane.showMessageDialog(null, "Berhasil Di Registrasi");
+                new MainMenu();
+                
+                frame.setVisible(false);
+                break;
+        }
     }
 
   
