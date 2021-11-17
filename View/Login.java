@@ -21,6 +21,7 @@ import javax.swing.JTextField;
 import Model.*;
 import java.awt.Image;
 import java.awt.Toolkit;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -38,13 +39,14 @@ public class Login implements ActionListener{
     JButton back = new JButton("BACK");
     JFrame icon = new JFrame();
     
+    String path = "E:\\Semester 5\\Prak PBO\\Quiz2\\src\\View\\a.jpg";
     public Login(){
         
         frame.setLayout(null);
         frame.setSize(700,500);
         frame.setLocationRelativeTo(null);
         menu.setLayout(null);
-        menu.setBounds(10,10,360,530);
+        menu.setBounds(10,10,600,600);
 
         labEmail.setBounds(50, 150, 100, 30);
         labPassword.setBounds(50, 220, 150, 30);
@@ -53,6 +55,12 @@ public class Login implements ActionListener{
         login.setBounds(10,300,120,50);
         back.setBounds(170,300,120,50);
         
+        JLabel labFoto = new JLabel();
+        labFoto.setBounds(400, 70, 200, 240);
+        
+        labFoto.setIcon(new ImageIcon(new ImageIcon(path).getImage().getScaledInstance(200, 240, Image.SCALE_DEFAULT)));
+
+        menu.add(labFoto);
         menu.add(back);
         menu.add(login);
         menu.add(labEmail);
